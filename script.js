@@ -50,15 +50,12 @@ class HobermanGroup
     }
 }
 
-function SetupHoberman()
+function SetupHoberman(edgeCount, radius)
 {
-    // var ngen = 8;
-    // var radius = 50;
-
-    // var offset = (360/ngen) *2;
+    // var offset = (360/edgeCount) *2;
     // var alpha = 0;
 
-    // for(int i = 0; i < ngen; i++)
+    // for(int i = 0; i < edgeCount; i++)
     // {
     //     var posx = radius * cos(alpha);
     //     var posy = radius * sin(alpha);
@@ -79,11 +76,6 @@ function clearCanvas(context, canvas)
     var w = canvas.width;
     canvas.width = 1;
     canvas.width = w;
-}
-
-function main()
-{
-
 }
 
 function drawCircle()
