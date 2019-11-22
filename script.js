@@ -9,18 +9,18 @@ class Point
         this.x = posx;
         this.y = posy;
     }
-    
+
     MoveToPosition(origin, travelDistance)
     {
         // Calculating Distance:
         var distanceX = origin.posx - this.x;
         var distanceY = origin.posy - this.y;
-        var distance = Math.sqrt((distx*distx) + (disty*disty)); 
-        
+        var distance = Math.sqrt((distx*distx) + (disty*disty));
+
         // Calculating Angle:
         var angleRadians = Math.atan2(disty, distx);
         var angleDegrees = Math.atan2(disty, distx) * 180 / Math.PI; // Not used for now, may be needed in the future.
-       
+
         // Calculating New Distance:
         var newDistance = distance - travelDistance;
         if (newDistance < 0) newDistance = 0;
@@ -40,15 +40,15 @@ class HobermanGroup
         this.ChildC = ChildC;
     }
 
-    DrawLines(context) 
+    DrawLines(context)
     {
-        context.beginPath();        
+        context.beginPath();
         context.moveTo(this.Mother.posx, this.Mother.posy);
         context.lineTo(this.ChildA.posx, this.ChildA.posy);
 
         context.moveTo(this.Mother.posx, this.Mother.posy);
         context.lineTo(this.ChildC.posx, this.ChildC.posy);
-        
+
         context.strokeStyle = '#FF0000';
         context.stroke();
     }
@@ -56,25 +56,31 @@ class HobermanGroup
 
 function SetupHoberman(edgeCount, radius)
 {
-    // var offset = (360/edgeCount) *2;
-    // var alpha = 0;
+    var offset = (360/edgeCount) *2;
+    var alpha = 0;
 
-    // for(int i = 0; i < edgeCount; i++)
-    // {
-    //     var posx = radius * cos(alpha);
-    //     var posy = radius * sin(alpha);
+    for(int i = 0; i < edgeCount; i++)
+    {
+        var posx = radius * cos(alpha);
+        var posy = radius * sin(alpha);
 
-    //     alpha = alpha + offset;
+        alpha = alpha + offset;
 
-    //     var PointB = (posx, posy);
-        
-    //     var PointA = Point(posx * sin(alpha/2), posy * cos(alpha/2));
-        
-    //     var PointC = Point(posx * cos(alpha/2), posy * sin(alpha/2));
-    // }
+        var PointB = (posx, posy);
+
+        var edge_b = 2 * Math.sin(offset/2) * radius;
+        var edge_c = Math.sqrt(radius * ( 1 - 2 * Math.sin(offset/2)));
+        var edge_h = (edge_b * edge_c) / radius;
+        var edge_p = Math.sqrt(pow(edge_c,2) - pow(edge_h,2));
+        var edge_k = pow(edge_h,2)/ edge_p;
+
+        var PointA = Point(posx * Math.sin(alpha/2), posy * Math.cos(alpha/2));
+
+        // var PointC = Point(posx * cos(alpha/2), posy * sin(alpha/2));
+    }
 }
 
-function clearCanvas(context, canvas) 
+function clearCanvas(context, canvas)
 {
     context.clearRect(0, 0, canvas.width, canvas.height);
     var w = canvas.width;
@@ -100,4 +106,3 @@ function drawCircle()
         ctx.stroke();
     }
 }
-
