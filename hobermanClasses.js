@@ -25,6 +25,25 @@ class Point
         this.posx = newDistance * Math.cos(angleRadians);
         this.posy = newDistance * Math.sin(angleRadians);
     }
+
+    RotateAround(pivot, angle)
+    {
+        // Calculating sine and cosines:
+        var angleSin = Math.sin(angle);
+        var angleCos = Math.cos(angle);
+
+        // Translating pivot to 0,0:
+        this.posx = this.posx - pivot.posx;
+        this.posy = this.posy - pivot.posy;
+
+        // Rotating the point:
+        var newX = this.posx * angleCos - this.posy * angleSin;
+        var newY = this.posx * angleSin + this.posy * angleCos;
+        
+        // Translate point back to its pivot:
+        this.posx = newX + pivot.posx;
+        this.posy = newY + pivot.posy;
+    }
 }
 
 class HobermanGroup
@@ -38,92 +57,115 @@ class HobermanGroup
 
     DrawLines(context)
     {
+        // Begin Drawing:
         context.beginPath();
+
+        // Draw Edge BA:
         context.moveTo(this.Mother.posx, this.Mother.posy);
         context.lineTo(this.ChildA.posx, this.ChildA.posy);
 
+        // Draw Edge BC:
         context.moveTo(this.Mother.posx, this.Mother.posy);
         context.lineTo(this.ChildC.posx, this.ChildC.posy);
 
-        context.strokeStyle = '#FF0000';
+        // Enable Lines, Adjust Line Color and Width:
+        context.strokeStyle = '#969696';
+        context.lineWidth = 2;
         context.stroke();
     }
 }
 
-function SetupHoberman(edgeCount, radius)
+function SetupHobermanCircle(edgeCount, radius)
 {
-    var Ox = 100; // Origin X
-    var Oy = 100; // Origin Y
+    // Calculating Origin:
+    var Ox = 500;
+    var Oy = 500;
+    var origin = new Point(Ox, Oy);
 
-    var offset = (360/edgeCount) * 2;
-    var theta = offset;
+    // Calculating single angle in polygon with count = edgeCount:
+    var theta = (360/(edgeCount));
 
+    // Degree to Radians:
+    var toRadians = Math.PI / 180;
+
+    // Theta In terms of radians:
+    var thetaRadian = theta * toRadians;
+
+    var currentAngle = 0;
     var hobermanGroupList = [];
-    for(var i = 0; i < edgeCount; i++)
+    
+    for (var i = 0; i < edgeCount; i++)
     {
-        var Bposx = radius * Math.cos(theta/2);
-        var Bposy = radius * Math.sin(theta/2);
+        // Calculate Current Angle in Radians:
+        var currentAngleRadians = currentAngle * toRadians;
 
-        var mother = new Point(Bposx, Bposy);
+        // Calculate Point B:
+        var Bx = radius * Math.cos(thetaRadian/2);
+        var By = radius * Math.sin(thetaRadian/2);
+        
+        // Calculate Point A:
+        var Ax = Bx * Math.cos(thetaRadian);
+        var Ay = Bx * Math.sin(thetaRadian);
 
-        var alpha = radius * Math.cos(theta/2);
-        var Aposx = Bposx * Math.cos(theta) + Ox;
-        var Aposy = Bposy * Math.sin(theta) + Oy;
+        // Calculate Point C:
+        var Cx = Bx - Math.tan(45 * toRadians - (thetaRadian / 4)) * By;
+        var Cy = 0;
 
-        var childa = new Point(Aposx, Aposy);
+        // Define Points A, B and C:
+        var pointB = new Point(Bx + Ox, By + Oy);
+        var pointA = new Point(Ax + Ox, Ay + Oy);
+        var pointC = new Point(Cx + Ox, Cy + Oy);
 
-        var toRadians = Math.PI / 180;
-        var Cposx = Ox + Bposx - Math.tan(45 * toRadians - (theta / 4));
-        var Cposy = Oy;
+        // // Rotate the points:
+        pointB.RotateAround(origin, currentAngleRadians);
+        pointA.RotateAround(origin, currentAngleRadians);
+        pointC.RotateAround(origin, currentAngleRadians);
 
-        var childc = new Point(Cposx, Cposy);
-
-        var hobermanGroup = new HobermanGroup(mother, childa, childc);
-
+        // Form and Store Hoberman Group formed by Points A, B and C:
+        var hobermanGroup = new HobermanGroup(pointB, pointA, pointC);
         hobermanGroupList.push(hobermanGroup);
 
-        // theta = theta + offset;
+        // Increment Rotation Angle:
+        currentAngle = theta + currentAngle;
     }
+
     return hobermanGroupList;
 }
 
-function clearCanvas(context, canvas)
+function ClearCanvas(context, canvas)
 {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    var w = canvas.width;
+    
+    var width = canvas.width;
+    
     canvas.width = 1;
-    canvas.width = w;
+    canvas.width = width;
 }
 
-InitAndStart();
-
-function InitAndStart()
+function SetupHobermanEnvironment()
 {
-    // var edgeCount = document.getElementByClassName('container__settings__options__field__edge-count').value;
-    // var radius = document.getElementByClassName('container__settings__options__field__radius').value;
-    var edgeCount  = 8;
-    var radius = 100;
-    var hobermanGroupList = SetupHoberman(edgeCount, radius);
-    renderLoop(hobermanGroupList);
+    var edgeCount  = 10;
+    var radius = 150;
+    var hobermanGroupList = SetupHobermanCircle(edgeCount, radius);
+    
+    DrawHobermanCircle(hobermanGroupList);
 }
 
-function renderLoop(hobermanGroupList)
+function DrawHobermanCircle(hobermanGroupList)
 {
-    draw(hobermanGroupList);
-    // update();
-}
-
-function draw(hobermanGroupList)
-{
-    // debugger;
     const canvas = document.querySelector(".container__canvas");
+
     if (canvas.getContext)
     {
-        var ctx = canvas.getContext('2d');
-        clearCanvas(ctx, canvas);
+        var context = canvas.getContext('2d');
+        
+        ClearCanvas(context, canvas);
+        
         for(var i = 0; i < hobermanGroupList.length; i++)
         {
-            hobermanGroupList[i].DrawLines(ctx);
+            hobermanGroupList[i].DrawLines(context);
         }
     }
 }
+
+SetupHobermanEnvironment();
