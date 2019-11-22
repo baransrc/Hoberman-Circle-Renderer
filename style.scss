@@ -31,7 +31,7 @@ body {
   background: #f5f5f5;
 
   &__settings {
-    width: 40%;
+    width: 30%;
     height: 100%;
     display: flex;
     flex-flow: column;
@@ -103,9 +103,16 @@ body {
     }
   }
 
-  &__canvas {
+  &__canvas-container {
     display: flex;
-    width: 100%;
+    width: 70%;
+    align-items: center;
+    justify-content: center;
+    background: #606060;
+  }
+
+  &__canvas{
+    background: #000000;
   }
 }
 
