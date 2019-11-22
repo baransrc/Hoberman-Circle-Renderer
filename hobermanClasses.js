@@ -93,40 +93,45 @@ function SetupHobermanCircle(edgeCount, radius)
 
     var currentAngle = 0;
     var hobermanGroupList = [];
+    var sign = 1;
     
-    for (var i = 0; i < edgeCount; i++)
+    for (var j = 0; j < 2; j++) 
     {
-        // Calculate Current Angle in Radians:
-        var currentAngleRadians = currentAngle * toRadians;
-
-        // Calculate Point B:
-        var Bx = radius * Math.cos(thetaRadian/2);
-        var By = radius * Math.sin(thetaRadian/2);
-        
-        // Calculate Point A:
-        var Ax = Bx * Math.cos(thetaRadian);
-        var Ay = Bx * Math.sin(thetaRadian);
-
-        // Calculate Point C:
-        var Cx = Bx - Math.tan(45 * toRadians - (thetaRadian / 4)) * By;
-        var Cy = 0;
-
-        // Define Points A, B and C:
-        var pointB = new Point(Bx + Ox, By + Oy);
-        var pointA = new Point(Ax + Ox, Ay + Oy);
-        var pointC = new Point(Cx + Ox, Cy + Oy);
-
-        // // Rotate the points:
-        pointB.RotateAround(origin, currentAngleRadians);
-        pointA.RotateAround(origin, currentAngleRadians);
-        pointC.RotateAround(origin, currentAngleRadians);
-
-        // Form and Store Hoberman Group formed by Points A, B and C:
-        var hobermanGroup = new HobermanGroup(pointB, pointA, pointC);
-        hobermanGroupList.push(hobermanGroup);
-
-        // Increment Rotation Angle:
-        currentAngle = theta + currentAngle;
+        for (var i = 0; i < edgeCount; i++)
+        {
+            // Calculate Current Angle in Radians:
+            var currentAngleRadians = currentAngle * toRadians;
+    
+            // Calculate Point B:
+            var Bx = radius * Math.cos(thetaRadian/2);
+            var By = radius * Math.sin(thetaRadian/2);
+            
+            // Calculate Point A:
+            var Ax = Bx * Math.cos(thetaRadian);
+            var Ay = Bx * Math.sin(thetaRadian);
+    
+            // Calculate Point C:
+            var Cx = Bx - Math.tan(45 * toRadians - (thetaRadian / 4)) * By;
+            var Cy = 0;
+    
+            // Define Points A, B and C:
+            var pointB = new Point(Bx + Ox, sign * By + Oy);
+            var pointA = new Point(Ax + Ox, sign * Ay + Oy);
+            var pointC = new Point(Cx + Ox, sign * Cy + Oy);
+    
+            // // Rotate the points:
+            pointB.RotateAround(origin, currentAngleRadians);
+            pointA.RotateAround(origin, currentAngleRadians);
+            pointC.RotateAround(origin, currentAngleRadians);
+    
+            // Form and Store Hoberman Group formed by Points A, B and C:
+            var hobermanGroup = new HobermanGroup(pointB, pointA, pointC);
+            hobermanGroupList.push(hobermanGroup);
+    
+            // Increment Rotation Angle:
+            currentAngle = theta + currentAngle;
+        }
+        sign = -1 * sign;
     }
 
     return hobermanGroupList;
