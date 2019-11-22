@@ -3,4 +3,31 @@ const $radius = document.querySelector(".container__settings__options__field__ra
 const $openness = document.querySelector(".container__settings__options__field__openness");
 const $canvas = document.querySelector(".container__canvas");
 
-<script src="hobermanClasses.js"><script/>
+function OnEdgeCountOrRadiusChanged(event)
+{
+    var input = event.target.value;
+
+    if (isNaN(input)) event.target.value = 5;
+    if (event.target.value <= 0) event.target.value = 1;
+    
+    // Setup Hoberman Environment
+    // Draw Hoberman
+}
+
+function OnOpennessChanged(event)
+{
+    var openness = event.target.value / 100;
+
+    // Calculate distances to origin for each point
+    // Multiply distance of each point with openness and take that value, say travelDistance
+    // For each point call MoveToPoint with parameters origin and travelDistance
+
+    // Then, draw Hoberman.
+}
+
+
+$edge_count.addEventListener('input', OnEdgeCountOrRadiusChanged);
+$radius.addEventListener('input', OnEdgeCountOrRadiusChanged);
+$openness.addEventListener('input', OnOpennessChanged);
+
+console.log("deneme")
