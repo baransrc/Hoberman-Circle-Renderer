@@ -10,7 +10,7 @@ $main-font: 'Montserrat', sans-serif;
 
 html,
 body {
-  overflow-x: hidden;
+  overflow: hidden;
   // background: $color-background;
   margin: 0;
   padding: 0;
@@ -32,6 +32,7 @@ body {
 
   &__settings {
     width: 40%;
+    height: 100%;
     display: flex;
     flex-flow: column;
     -webkit-box-shadow: 3px 0px 13px -2px rgba(0,0,0,0.1);
@@ -58,20 +59,18 @@ body {
       flex-flow: column;
       justify-content: center;
       height: 100%;
-      padding: 50px;
-
-
+      
       &__field {
         display: flex;
         justify-content: center;
         flex-flow: column;
         height: 150px;
-        
-        margin-top: 50px;
-        margin-bottom: 50px;
+        padding: 0px 50px;
+        margin-top: 30px;
+        margin-bottom: 30px;
 
         &__label {
-          font-size: 20px;
+          font-size: 23px;
         }
 
         &__edge-count {
@@ -97,7 +96,10 @@ body {
     &__footer {
       white-space: pre-line;
       font-size: 25px;
-      padding: 50px;
+      margin-left: 50px;
+      margin-bottom: 50px;
+      margin-right: 50px;
+      margin-top: 0px;
     }
   }
 
