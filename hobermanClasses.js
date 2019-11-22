@@ -119,7 +119,7 @@ function InitAndStart()
     // var edgeCount = document.getElementByClassName('container__settings__options__field__edge-count').value;
     // var radius = document.getElementByClassName('container__settings__options__field__radius').value;
     var edgeCount  = 8;
-    var radius = 20;
+    var radius = 150;
     var hobermanPointsList = SetupHoberman(edgeCount, radius);
     renderLoop(hobermanPointsList);
 }
@@ -139,16 +139,26 @@ function draw(hobermanPointsList)
     var Y = $canvas.height/2;
     if (canvas.getContext)
     {
+        // var ctx = canvas.getContext('2d');
+        // clearCanvas(ctx, canvas);
+        // var X = canvas.width / 2;
+        // var Y = canvas.height / 2;
+        // var R = 50;
+        // ctx.beginPath();
+        // ctx.arc(X, Y, R, 0, 2 * Math.PI, false);
+        // ctx.lineWidth = 3;
+        // ctx.strokeStyle = '#FF0000';
+        // ctx.stroke();
         for(var i = 0; i < hobermanPointsList.length; i++)
         {
             var ctx = canvas.getContext('2d');
             // clearCanvas(ctx, canvas);
             ctx.beginPath();
-            ctx.lineTo(X - hobermanPointsList[i].Mother.posx, Y - hobermanPointsList[i].Mother.posy);
-            ctx.moveTo(X - hobermanPointsList[i].ChildA.posx, Y - hobermanPointsList[i].ChildA.posy);
-
             ctx.moveTo(X - hobermanPointsList[i].Mother.posx, Y - hobermanPointsList[i].Mother.posy);
-            ctx.lineTo(X - hobermanPointsList[i].ChildC.posx, Y - hobermanPointsList[i].ChildC.posy);
+            ctx.lineTo(X - hobermanPointsList[i].ChildA.posx, Y - hobermanPointsList[i].ChildA.posy);
+
+            ctx.moveTo(X - hobermanPointsList[i].ChildC.posx, Y - hobermanPointsList[i].ChildC.posy);
+            ctx.lineTo(X - hobermanPointsList[i].Mother.posx, Y - hobermanPointsList[i].Mother.posy);
             ctx.strokeStyle = '#FF0000';
             ctx.stroke();
         }
