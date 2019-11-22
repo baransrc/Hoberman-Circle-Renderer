@@ -9,7 +9,13 @@ function OnEdgeCountOrRadiusChanged(event)
 
     if (isNaN(input)) event.target.value = 5;
     if (event.target.value <= 0) event.target.value = 1;
+
+    var edgeCount = $edge_count.value;
+    var radius = $radius.value;
+
+    console.log(edgeCount + "  " + radius); // Comment-out if needed.
     
+    // Use edgeCount and radius
     // Setup Hoberman Environment
     // Draw Hoberman
 }
