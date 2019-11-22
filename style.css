@@ -141,11 +141,6 @@ body {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background: #606060;
-}
-
-.container__canvas {
-  background: #000000;
 }
 
 a {
