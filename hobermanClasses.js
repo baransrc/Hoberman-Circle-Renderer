@@ -75,7 +75,7 @@ function SetupHoberman(edgeCount, radius)
 
         alpha = alpha + offset;
 
-        var pointB = new Point(posx, posy);
+        var mother = new Point(posx, posy);
 
         // var edge_b = 2 * Math.sin(offset/2) * radius;
         // var edge_c = Math.sqrt(radius * ( 1 - 2 * Math.sin(offset/2)));
@@ -83,16 +83,16 @@ function SetupHoberman(edgeCount, radius)
         // var edge_p = Math.sqrt(pow(edge_c,2) - pow(edge_h,2));
         // var edge_k = pow(edge_h,2)/ edge_p;
 
-        var pointA = new Point(posx * Math.sin(alpha/2), posy * Math.cos(alpha/2));
+        var childa = new Point(posx * Math.sin(alpha/2), posy * Math.cos(alpha/2));
 
-        hobermanPoints.PointA = pointA;
-        hobermanPoints.PointB = pointB;
+        hobermanPoints.ChildA = childa;
+        hobermanPoints.Mother = mother;
         hobermanPointsList.push(hobermanPoints);
     }
     var prev = hobermanPointsList[hobermanPointsList.length - 1];
     for(var i = 0; i < hobermanPointsList.length; i++)
     {
-        hobermanPointsList[i].PointC = prev.PointA;
+        hobermanPointsList[i].ChildC = prev.ChildA;
         if(i == hobermanPointsList.length){
             prev = hobermanPointsList[0];
         }
@@ -112,17 +112,14 @@ function clearCanvas(context, canvas)
 }
 
 
-while(true)
-{
-    InitAndStart();
-}
+InitAndStart();
 
 function InitAndStart()
 {
     // var edgeCount = document.getElementByClassName('container__settings__options__field__edge-count').value;
     // var radius = document.getElementByClassName('container__settings__options__field__radius').value;
     var edgeCount  = 8;
-    var radius = 50;
+    var radius = 20;
     var hobermanPointsList = SetupHoberman(edgeCount, radius);
     renderLoop(hobermanPointsList);
 }
@@ -135,30 +132,23 @@ function renderLoop(hobermanPointsList)
 
 function draw(hobermanPointsList)
 {
+    debugger;
     // var canvas = document.getElementsByClassName('container__canvas');
     const canvas = document.querySelector(".container__canvas");
+    var X = $canvas.width/2;
+    var Y = $canvas.height/2;
     if (canvas.getContext)
     {
-        // var ctx = canvas.getContext('2d');
-        // clearCanvas(ctx, canvas);
-        // var X = canvas.width / 2;
-        // var Y = canvas.height / 2;
-        // var R = 50;
-        // ctx.beginPath();
-        // ctx.arc(X, Y, R, 0, 2 * Math.PI, false);
-        // ctx.lineWidth = 3;
-        // ctx.strokeStyle = '#FF0000';
-        // ctx.stroke();
-        for(var i = 0;hobermanPointsList.length; i++)
+        for(var i = 0; i < hobermanPointsList.length; i++)
         {
             var ctx = canvas.getContext('2d');
-            clearCanvas(ctx, canvas);
+            // clearCanvas(ctx, canvas);
             ctx.beginPath();
-            ctx.lineTo(hobermanPointsList.PointA.getPosx(), hobermanPointsList.PointA.getPosy());
-            ctx.moveTo(hobermanPointsList.PointB.getPosx(), hobermanPointsList.PointB.getPosy());
+            ctx.lineTo(X - hobermanPointsList[i].Mother.posx, Y - hobermanPointsList[i].Mother.posy);
+            ctx.moveTo(X - hobermanPointsList[i].ChildA.posx, Y - hobermanPointsList[i].ChildA.posy);
 
-            ctx.moveTo(hobermanPointsList.PointB.getPosx(), hobermanPointsList.PointB.getPosy());
-            ctx.lineTo(hobermanPointsList.PointC.getPosx(), hobermanPointsList.PointC.getPosy());
+            ctx.moveTo(X - hobermanPointsList[i].Mother.posx, Y - hobermanPointsList[i].Mother.posy);
+            ctx.lineTo(X - hobermanPointsList[i].ChildC.posx, Y - hobermanPointsList[i].ChildC.posy);
             ctx.strokeStyle = '#FF0000';
             ctx.stroke();
         }
