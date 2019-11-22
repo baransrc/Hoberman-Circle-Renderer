@@ -25,9 +25,7 @@ function OnOpennessChanged(event)
     // Then, draw Hoberman.
 }
 
-
+// Add Event Listeners:
 $edge_count.addEventListener('input', OnEdgeCountOrRadiusChanged);
 $radius.addEventListener('input', OnEdgeCountOrRadiusChanged);
 $openness.addEventListener('input', OnOpennessChanged);
-
-console.log("deneme")
