@@ -1,3 +1,7 @@
+var DISTANCE_AB = 0;
+var DISTANCE_CB = 0;
+var CURRENT_RADIUS = 0;
+
 class Point
 {
     constructor(x, y)
@@ -90,6 +94,13 @@ function FormHobermanCircle(edgeCount, radius, closednessUnit, canvas)
 
     // Calculate Distance Between Points C and B:
     var distanceCB = Math.tan(alpha) * distanceAB;
+
+    // Apply Distance of AB and CB to Global Variables:
+    DISTANCE_AB = distanceAB;
+    DISTANCE_CB = distanceCB;
+
+    // Calculate Distance between B and Origin (It corresponds to current radius of the circle):
+    CURRENT_RADIUS = Math.sqrt(Math.pow(Bx, 2) + Math.pow(By, 2));
 
     // Calculate Distance of A From The Origin:
     var distanceOA = Bx + (distanceAB * Math.sin(epsilon));
