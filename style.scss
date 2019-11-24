@@ -37,6 +37,7 @@ body {
     -webkit-box-shadow: 3px 0px 13px -2px rgba(0,0,0,0.1);
     -moz-box-shadow: 3px 0px 13px -2px rgba(0,0,0,0.1);
     box-shadow: 3px 0px 13px -2px rgba(0,0,0,0.1);
+    z-index: 5;
 
     &__header {
       display: flex;
@@ -107,6 +108,7 @@ body {
     width: 70%;
     align-items: center;
     justify-content: center;
+    z-index: 0;
   }
 
   &__canvas{

@@ -2,17 +2,22 @@ const $edge_count = document.querySelector(".container__settings__options__field
 const $radius = document.querySelector(".container__settings__options__field__radius");
 const $closedness = document.querySelector(".container__settings__options__field__closedness");
 const $canvas = document.querySelector(".container__canvas");
+const $closedness_label = document.querySelector(".container__settings__options__field__closedness-label");
 
 var hobermanGroupList;
 var origin;
 
-function CheckFields()
+function ChangeFields()
 {
-    if (isNaN($closedness.value)) $closedness.value = 1;
-    if ($closedness.value <= 0) $closedness.value = 1;
+    if (isNaN($closedness.value)) $closedness.value = 0;
+    if ($closedness.value < 0) $closedness.value = 0;
+
+    $closedness_label.innerHTML = "CLOSEDNESS - " + $closedness.value + "%";
 
     if (isNaN($edge_count.value)) $edge_count.value = 3;
     if ($edge_count.value <= 0) $edge_count.value = 1;
+
+    $edge_count.value = Math.round($edge_count.value); 
 
     if (isNaN($radius.value)) $radius.value = 1;
     if ($radius.value <= 0) $radius.value = 1;
@@ -32,7 +37,7 @@ function SetupAndDrawHobermanCircle()
 
 function OnInputFieldsChanged(event)
 {
-    CheckFields();
+    ChangeFields();
     SetupAndDrawHobermanCircle();
 }
 
@@ -42,6 +47,7 @@ function Initialize()
     $radius.value = 250;
     $closedness.value = 0;
 
+    ChangeFields();
     SetupAndDrawHobermanCircle();
 }
 
