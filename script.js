@@ -1,37 +1,54 @@
 const $edge_count = document.querySelector(".container__settings__options__field__edge-count");
 const $radius = document.querySelector(".container__settings__options__field__radius");
-const $openness = document.querySelector(".container__settings__options__field__openness");
+const $closedness = document.querySelector(".container__settings__options__field__closedness");
 const $canvas = document.querySelector(".container__canvas");
 
-function OnEdgeCountOrRadiusChanged(event)
+var hobermanGroupList;
+var origin;
+
+function CheckFields()
 {
-    var input = event.target.value;
+    if (isNaN($closedness.value)) $closedness.value = 1;
+    if ($closedness.value <= 0) $closedness.value = 1;
 
-    if (isNaN(input)) event.target.value = 5;
-    if (event.target.value <= 0) event.target.value = 1;
+    if (isNaN($edge_count.value)) $edge_count.value = 3;
+    if ($edge_count.value <= 0) $edge_count.value = 1;
 
-    var edgeCount = $edge_count.value;
-    var radius = $radius.value;
-
-    console.log(edgeCount + "  " + radius); // Comment-out if needed.
-    
-    // Use edgeCount and radius
-    // Setup Hoberman Environment
-    // Draw Hoberman
+    if (isNaN($radius.value)) $radius.value = 1;
+    if ($radius.value <= 0) $radius.value = 1;
 }
 
-function OnOpennessChanged(event)
+function SetupAndDrawHobermanCircle()
 {
-    var openness = event.target.value / 100;
+    // Get inputs from fields:
+    var edgeCount = $edge_count.value;
+    var radius = $radius.value;
+    var closedness = $closedness.value / 100;
+    
+    // Form and Draw Hoberman Circle:
+    hobermanGroupList = FormHobermanCircle(edgeCount, radius, closedness, $canvas);
+    DrawHobermanCircle(hobermanGroupList, $canvas);
+}
 
-    // Calculate distances to origin for each point
-    // Multiply distance of each point with openness and take that value, say travelDistance
-    // For each point call MoveToPoint with parameters origin and travelDistance
+function OnInputFieldsChanged(event)
+{
+    CheckFields();
+    SetupAndDrawHobermanCircle();
+}
 
-    // Then, draw Hoberman.
+function Initialize()
+{
+    $edge_count.value = 3;
+    $radius.value = 250;
+    $closedness.value = 0;
+
+    SetupAndDrawHobermanCircle();
 }
 
 // Add Event Listeners:
-$edge_count.addEventListener('input', OnEdgeCountOrRadiusChanged);
-$radius.addEventListener('input', OnEdgeCountOrRadiusChanged);
-$openness.addEventListener('input', OnOpennessChanged);
+$edge_count.addEventListener('input', OnInputFieldsChanged);
+$radius.addEventListener('input', OnInputFieldsChanged);
+$closedness.addEventListener('input', OnInputFieldsChanged);
+
+// Function Calls:
+Initialize();

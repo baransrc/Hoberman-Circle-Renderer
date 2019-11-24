@@ -1,29 +1,9 @@
 class Point
 {
-    constructor(posx, posy)
+    constructor(x, y)
     {
-        this.posx = posx;
-        this.posy = posy;
-    }
-
-    MoveToPosition(origin, travelDistance)
-    {
-        // Calculating Distance:
-        var distanceX = origin.posx - this.posx;
-        var distanceY = origin.posy - this.posy;
-        var distance = Math.sqrt((distx*distx) + (disty*disty));
-
-        // Calculating Angle:
-        var angleRadians = Math.atan2(disty, distx);
-        var angleDegrees = Math.atan2(disty, distx) * 180 / Math.PI; // Not used for now, may be needed in the future.
-
-        // Calculating New Distance:
-        var newDistance = distance - travelDistance;
-        if (newDistance < 0) newDistance = 0;
-
-        // Applying New X and Y Positions:
-        this.posx = newDistance * Math.cos(angleRadians);
-        this.posy = newDistance * Math.sin(angleRadians);
+        this.x = x;
+        this.y = y;
     }
 
     RotateAround(pivot, angle)
@@ -33,26 +13,26 @@ class Point
         var angleCos = Math.cos(angle);
 
         // Translating pivot to 0,0:
-        this.posx = this.posx - pivot.posx;
-        this.posy = this.posy - pivot.posy;
+        this.x = this.x - pivot.x;
+        this.y = this.y - pivot.y;
 
         // Rotating the point:
-        var newX = this.posx * angleCos - this.posy * angleSin;
-        var newY = this.posx * angleSin + this.posy * angleCos;
+        var newX = this.x * angleCos - this.y * angleSin;
+        var newY = this.x * angleSin + this.y * angleCos;
         
         // Translate point back to its pivot:
-        this.posx = newX + pivot.posx;
-        this.posy = newY + pivot.posy;
+        this.x = newX + pivot.x;
+        this.y = newY + pivot.y;
     }
 }
 
 class HobermanGroup
 {
-    constructor(Mother, ChildA, ChildC)
+    constructor(PointB, PointA, PointC)
     {
-        this.Mother = Mother;
-        this.ChildA = ChildA;
-        this.ChildC = ChildC;
+        this.PointB = PointB;
+        this.PointA = PointA;
+        this.PointC = PointC;
     }
 
     DrawLines(context)
@@ -61,12 +41,12 @@ class HobermanGroup
         context.beginPath();
 
         // Draw Edge BA:
-        context.moveTo(this.Mother.posx, this.Mother.posy);
-        context.lineTo(this.ChildA.posx, this.ChildA.posy);
+        context.moveTo(this.PointB.x, this.PointB.y);
+        context.lineTo(this.PointA.x, this.PointA.y);
 
         // Draw Edge BC:
-        context.moveTo(this.Mother.posx, this.Mother.posy);
-        context.lineTo(this.ChildC.posx, this.ChildC.posy);
+        context.moveTo(this.PointB.x, this.PointB.y);
+        context.lineTo(this.PointC.x, this.PointC.y);
 
         // Enable Lines, Adjust Line Color and Width:
         context.strokeStyle = '#969696';
@@ -75,24 +55,60 @@ class HobermanGroup
     }
 }
 
-function SetupHobermanCircle(edgeCount, radius)
+function FormHobermanCircle(edgeCount, radius, closednessUnit, canvas)
 {
-    // Calculating Origin:
-    var Ox = 500;
-    var Oy = 500;
+    // Define Closedness:
+    //      As you may have noticed, closedness is a value between 0 and radius / 2.
+    var closedness = (closednessUnit * radius) / 2;
+
+    // Calculate the Origin:
+    var Ox = canvas.width / 2;
+    var Oy = canvas.height / 2;
     var origin = new Point(Ox, Oy);
 
-    // Calculating single angle in polygon with count = edgeCount:
-    var theta = (360/(edgeCount));
+    // Calculate single angle in polygon with count = edgeCount:
+    var theta = (360 / edgeCount);
 
     // Degree to Radians:
     var toRadians = Math.PI / 180;
 
-    // Theta In terms of radians:
+    // Theta in Terms of radians:
     var thetaRadian = theta * toRadians;
 
+    // Calculate Point B:
+    var Bx = (radius - closedness) * Math.cos(thetaRadian/2);
+    var By = (radius - closedness) * Math.sin(thetaRadian/2);
+    
+    // Calculate Distance Between Point A and B:
+    var distanceAB = radius * Math.sin(thetaRadian/2);
+
+    // Calculate Angles Alpha and Epsilon:
+    //      Epsilon is the Angle between A and line perpendicular to hypotenuse drawn from point B.
+    //      Alpha is the one third of the angle ABC^.
+    var alpha = 45 * toRadians - (thetaRadian / 4);
+    var epsilon = Math.acos(By / distanceAB);
+
+    // Calculate Distance Between Points C and B:
+    var distanceCB = Math.tan(alpha) * distanceAB;
+
+    // Calculate Distance of A From The Origin:
+    var distanceOA = Bx + (distanceAB * Math.sin(epsilon));
+
+    // Calculate Point A:
+    var Ax = distanceOA * Math.cos(thetaRadian);
+    var Ay = distanceOA * Math.sin(thetaRadian);
+
+    // Calculate Point C:
+    var Cx = Bx - (distanceCB * Math.sin(alpha + epsilon));
+    var Cy = 0;
+
+    // Define Initial Angle:
     var currentAngle = 0;
+
+    // Define The List That Will Store Hoberman Groups Formed By 3 Points:
     var hobermanGroupList = [];
+
+    // Define Sign Which Will Be Used to Create Other Chain of Hoberman Circle:
     var sign = 1;
     
     for (var j = 0; j < 2; j++) 
@@ -102,24 +118,12 @@ function SetupHobermanCircle(edgeCount, radius)
             // Calculate Current Angle in Radians:
             var currentAngleRadians = currentAngle * toRadians;
     
-            // Calculate Point B:
-            var Bx = radius * Math.cos(thetaRadian/2);
-            var By = radius * Math.sin(thetaRadian/2);
-            
-            // Calculate Point A:
-            var Ax = Bx * Math.cos(thetaRadian);
-            var Ay = Bx * Math.sin(thetaRadian);
-    
-            // Calculate Point C:
-            var Cx = Bx - Math.tan(45 * toRadians - (thetaRadian / 4)) * By;
-            var Cy = 0;
-    
             // Define Points A, B and C:
             var pointB = new Point(Bx + Ox, sign * By + Oy);
             var pointA = new Point(Ax + Ox, sign * Ay + Oy);
             var pointC = new Point(Cx + Ox, sign * Cy + Oy);
     
-            // // Rotate the points:
+            // Rotate the points:
             pointB.RotateAround(origin, currentAngleRadians);
             pointA.RotateAround(origin, currentAngleRadians);
             pointC.RotateAround(origin, currentAngleRadians);
@@ -131,7 +135,10 @@ function SetupHobermanCircle(edgeCount, radius)
             // Increment Rotation Angle:
             currentAngle = theta + currentAngle;
         }
+        
+        // Flip the Sign and Refresh Starting Angle:
         sign = -1 * sign;
+        currentAngle = 0;
     }
 
     return hobermanGroupList;
@@ -140,37 +147,27 @@ function SetupHobermanCircle(edgeCount, radius)
 function ClearCanvas(context, canvas)
 {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    
-    var width = canvas.width;
-    
-    canvas.width = 1;
-    canvas.width = width;
 }
 
-function SetupHobermanEnvironment()
+function SetupHobermanEnvironment(edgeCount, radius)
 {
-    var edgeCount  = 10;
-    var radius = 150;
     var hobermanGroupList = SetupHobermanCircle(edgeCount, radius);
     
     DrawHobermanCircle(hobermanGroupList);
 }
 
-function DrawHobermanCircle(hobermanGroupList)
+function DrawHobermanCircle(hobermanGroupList, canvas)
 {
-    const canvas = document.querySelector(".container__canvas");
+    if (!canvas.getContext) return;
 
-    if (canvas.getContext)
+    var context = canvas.getContext('2d');
+    
+    ClearCanvas(context, canvas);
+    
+    var length = hobermanGroupList.length;
+
+    for (var i = 0; i < length; i++)
     {
-        var context = canvas.getContext('2d');
-        
-        ClearCanvas(context, canvas);
-        
-        for(var i = 0; i < hobermanGroupList.length; i++)
-        {
-            hobermanGroupList[i].DrawLines(context);
-        }
+        hobermanGroupList[i].DrawLines(context);
     }
 }
-
-SetupHobermanEnvironment();
