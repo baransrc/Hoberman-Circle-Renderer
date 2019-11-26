@@ -117,6 +117,6 @@ window.addEventListener('resize', OnWindowResize);
 window.addEventListener('load', OnLoad);
 
 // Function Calls:
-Initialize();
+Initialize(edgeCount = 8);
 
 

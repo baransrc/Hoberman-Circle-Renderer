@@ -39,7 +39,7 @@ class HobermanGroup
         this.PointC = PointC;
     }
 
-    DrawLines(context)
+    DrawLines(context, color)
     {
         // Begin Drawing:
         context.beginPath();
@@ -53,7 +53,7 @@ class HobermanGroup
         context.lineTo(this.PointC.x, this.PointC.y);
 
         // Enable Lines, Adjust Line Color and Width:
-        context.strokeStyle = '#969696';
+        context.strokeStyle = color;
         context.lineWidth = 2;
         context.stroke();
     }
@@ -172,13 +172,30 @@ function DrawHobermanCircle(hobermanGroupList, canvas)
     if (!canvas.getContext) return;
 
     var context = canvas.getContext('2d');
-    
+    var color1 = "#969696";
+    var color2 = "#262626";
+
     ClearCanvas(context, canvas);
     
     var length = hobermanGroupList.length;
 
+    var colors = [];
+
+    if ((length / 2) % 2  == 0)
+    {
+        colors.push(color1);
+        colors.push(color2);
+    }
+
+    else 
+    {
+        colors.push(color1);
+    }
+   
+
     for (var i = 0; i < length; i++)
     {
-        hobermanGroupList[i].DrawLines(context);
+        var color = colors[i % colors.length];
+        hobermanGroupList[i].DrawLines(context, color);
     }
 }
