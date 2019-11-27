@@ -1,5 +1,6 @@
 var DISTANCE_AB = 0;
 var DISTANCE_CB = 0;
+var POSITION_C = 0;
 var CURRENT_RADIUS = 0;
 
 class Point
@@ -46,11 +47,17 @@ class HobermanGroup
 
         // Draw Edge BA:
         context.moveTo(this.PointB.x, this.PointB.y);
+        context.fillRect(this.PointB.x - 2.5, this.PointB.y- 2.5,5,5);
+        context.fillStyle = "#DC143C";
         context.lineTo(this.PointA.x, this.PointA.y);
+        context.fillRect(this.PointA.x - 2.5, this.PointA.y - 2.5,5,5);
+        context.fillStyle = "#7CFC00";
 
         // Draw Edge BC:
         context.moveTo(this.PointB.x, this.PointB.y);
         context.lineTo(this.PointC.x, this.PointC.y);
+        context.fillRect(this.PointC.x - 2.5, this.PointC.y - 2.5,5,5);
+        context.fillStyle = "#1E90FF";
 
         // Enable Lines, Adjust Line Color and Width:
         context.strokeStyle = color;
@@ -99,11 +106,11 @@ function FormHobermanCircle(edgeCount, radius, closednessUnit, canvas)
     DISTANCE_AB = distanceAB;
     DISTANCE_CB = distanceCB;
 
-    // Calculate Distance between B and Origin (It corresponds to current radius of the circle):
-    CURRENT_RADIUS = Math.sqrt(Math.pow(Bx, 2) + Math.pow(By, 2));
-
     // Calculate Distance of A From The Origin:
     var distanceOA = Bx + (distanceAB * Math.sin(epsilon));
+
+    // Calculate Distance of B from The Origin:
+    var distanceOB = Math.sqrt(Math.pow(Bx, 2) + Math.pow(By, 2));
 
     // Calculate Point A:
     var Ax = distanceOA * Math.cos(thetaRadian);
@@ -112,6 +119,15 @@ function FormHobermanCircle(edgeCount, radius, closednessUnit, canvas)
     // Calculate Point C:
     var Cx = Bx - (distanceCB * Math.sin(alpha + epsilon));
     var Cy = 0;
+
+    // Calculate Distance of C from The Origin:
+    var distanceOC = Math.sqrt(Math.pow(Cx, 2) + Math.pow(Cy, 2));
+
+    // Calculate Current Radius:
+    CURRENT_RADIUS = Math.max(distanceOA, distanceOB, distanceOC);
+
+    // For Debug:
+    POSITION_C = new Point(Cx,Cy);
 
     // Define Initial Angle:
     var currentAngle = 0;

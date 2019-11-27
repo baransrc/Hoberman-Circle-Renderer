@@ -58,7 +58,10 @@ function PrintOutput()
     var distanceAB = Number(DISTANCE_AB).toFixed(4);
     var distanceCB = Number(DISTANCE_CB).toFixed(4);
 
-    var outputString = "CURRENT RADIUS - " + currentRadius + "&#10;" + "DISTANCE AB - " + distanceAB + "&#10;" + "DISTANCE CB - " + distanceCB;
+    var outputString = "DISTANCE AB - " + distanceAB + "&#10;" + "DISTANCE CB - " + distanceCB + "&#10;" + "CURRENT RADIUS - " + currentRadius;
+    
+    // For Debug Purposes:
+    // outputString = outputString + "&#10;C - (" + POSITION_C.x + ", " + POSITION_C.y + ")";
 
     $output_text.innerHTML = outputString;
 }
