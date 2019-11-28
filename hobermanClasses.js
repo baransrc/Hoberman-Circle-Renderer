@@ -2,6 +2,8 @@ var DISTANCE_AB = 0;
 var DISTANCE_CB = 0;
 var POSITION_C = 0;
 var CURRENT_RADIUS = 0;
+var EPSILON = 0;
+var ALPHA = 0;
 
 class Point
 {
@@ -68,10 +70,6 @@ class HobermanGroup
 
 function FormHobermanCircle(edgeCount, radius, closednessUnit, canvas)
 {
-    // Define Closedness:
-    //      As you may have noticed, closedness is a value between 0 and radius / 2.
-    var closedness = (closednessUnit * radius) / 2;
-
     // Calculate the Origin:
     var Ox = canvas.width / 2;
     var Oy = canvas.height / 2;
@@ -83,13 +81,11 @@ function FormHobermanCircle(edgeCount, radius, closednessUnit, canvas)
     // Degree to Radians:
     var toRadians = Math.PI / 180;
 
+    var toDegrees = 180 / Math.PI;
+
     // Theta in Terms of radians:
     var thetaRadian = theta * toRadians;
 
-    // Calculate Point B:
-    var Bx = (radius - closedness) * Math.cos(thetaRadian/2);
-    var By = (radius - closedness) * Math.sin(thetaRadian/2);
-    
     // Calculate Distance Between Point A and B:
     var distanceAB = radius * Math.sin(thetaRadian/2);
 
@@ -97,10 +93,21 @@ function FormHobermanCircle(edgeCount, radius, closednessUnit, canvas)
     //      Epsilon is the Angle between A and line perpendicular to hypotenuse drawn from point B.
     //      Alpha is the one third of the angle ABC^.
     var alpha = 45 * toRadians - (thetaRadian / 4);
-    var epsilon = Math.acos(By / distanceAB);
-
+    ALPHA = alpha  * toDegrees;
+    
     // Calculate Distance Between Points C and B:
     var distanceCB = Math.tan(alpha) * distanceAB;
+
+    // Define Closedness:
+    //      As you may have noticed, closedness is a value between 0 and radius / 2.
+    var closedness = (closednessUnit * (radius - distanceCB));
+
+    // Calculate Point B:
+    var Bx = (radius - closedness) * Math.cos(thetaRadian/2);
+    var By = (radius - closedness) * Math.sin(thetaRadian/2);
+
+    var epsilon = Math.acos(By / distanceAB);   
+    EPSILON = epsilon * toDegrees;
 
     // Apply Distance of AB and CB to Global Variables:
     DISTANCE_AB = distanceAB;

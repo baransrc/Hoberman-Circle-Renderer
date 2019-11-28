@@ -61,7 +61,10 @@ function PrintOutput()
     var outputString = "DISTANCE AB - " + distanceAB + "&#10;" + "DISTANCE CB - " + distanceCB + "&#10;" + "CURRENT RADIUS - " + currentRadius;
     
     // For Debug Purposes:
-    // outputString = outputString + "&#10;C - (" + POSITION_C.x + ", " + POSITION_C.y + ")";
+    outputString = outputString + "&#10;C - (" + POSITION_C.x + ", " + POSITION_C.y + ")";
+    outputString = outputString +  "&#10;ALPHA - " + ALPHA;
+    outputString = outputString +  "&#10;EPSILON - " + EPSILON;
+    outputString = outputString +  "&#10;BETA - " + (90 - ALPHA - EPSILON);
 
     $output_text.innerHTML = outputString;
 }
