@@ -5,6 +5,7 @@ var CURRENT_RADIUS = 0;
 var EPSILON = 0;
 var ALPHA = 0;
 var THETA = 0;
+var DRAW_BOTH_CHAINS = true
 
 class Point
 {
@@ -207,13 +208,16 @@ function DrawHobermanCircle(hobermanGroupList, canvas)
 
     else 
     {
-        colors.push(color1);
+        colors.push(color2);
     }
    
-
     for (var i = 0; i < length; i++)
     {
         var color = colors[i % colors.length];
-        hobermanGroupList[i].DrawLines(context, color);
+        
+        if (color == color2 || DRAW_BOTH_CHAINS)
+        {
+            hobermanGroupList[i].DrawLines(context, color);
+        }
     }
 }

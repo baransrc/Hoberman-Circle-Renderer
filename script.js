@@ -10,6 +10,14 @@ const $output_text = document.querySelector(".container__canvas-container__outpu
 var hobermanGroupList;
 var origin;
 
+
+function ProcessCanvasClick()
+{
+    DRAW_BOTH_CHAINS = !DRAW_BOTH_CHAINS;
+    SetupAndDrawHobermanCircle();
+    PrintOutput();
+}
+
 function ChangeFields()
 {
     if (isNaN($closedness.value)) $closedness.value = 0;
@@ -60,6 +68,16 @@ function PrintOutput()
                        "DISTANCE AB - " + distanceAB + "&#10;" + 
                        "DISTANCE CB - " + distanceCB + "&#10;" + 
                        "CURRENT RADIUS - " + currentRadius;
+
+    if (DRAW_BOTH_CHAINS == true)
+    {
+        outputString = outputString + "&#10;" + "DRAW MODE - BOTH CHAINS"
+    }
+
+    else
+    {
+        outputString = outputString + "&#10;" + "DRAW MODE - SINGLE CHAIN"
+    }
     
     // For Debug Purposes:
     // outputString = outputString +  "&#10;ALPHA - " + ALPHA;
@@ -121,6 +139,7 @@ function OnLoad()
 $edge_count.addEventListener('input', OnInputFieldsChanged);
 $radius.addEventListener('input', OnInputFieldsChanged);
 $closedness.addEventListener('input', OnInputFieldsChanged);
+$canvas.addEventListener('click', ProcessCanvasClick);
 window.addEventListener('resize', OnWindowResize);
 window.addEventListener('load', OnLoad);
 
