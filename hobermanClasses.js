@@ -4,6 +4,7 @@ var POSITION_C = 0;
 var CURRENT_RADIUS = 0;
 var EPSILON = 0;
 var ALPHA = 0;
+var THETA = 0;
 
 class Point
 {
@@ -77,6 +78,7 @@ function FormHobermanCircle(edgeCount, radius, closednessUnit, canvas)
 
     // Calculate single angle in polygon with count = edgeCount:
     var theta = (360 / edgeCount);
+    THETA = theta;
 
     // Degree to Radians:
     var toRadians = Math.PI / 180;
@@ -181,13 +183,6 @@ function FormHobermanCircle(edgeCount, radius, closednessUnit, canvas)
 function ClearCanvas(context, canvas)
 {
     context.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-function SetupHobermanEnvironment(edgeCount, radius)
-{
-    var hobermanGroupList = SetupHobermanCircle(edgeCount, radius);
-    
-    DrawHobermanCircle(hobermanGroupList);
 }
 
 function DrawHobermanCircle(hobermanGroupList, canvas)
