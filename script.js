@@ -56,13 +56,15 @@ function PrintOutput()
     var distanceAB = Number(DISTANCE_AB).toFixed(4);
     var distanceCB = Number(DISTANCE_CB).toFixed(4);
 
-    var outputString = "DISTANCE AB - " + distanceAB + "&#10;" + "DISTANCE CB - " + distanceCB + "&#10;" + "CURRENT RADIUS - " + currentRadius;
+    var outputString = "ANGLE ABC - " + (ALPHA * 3) +  "&#10;" + 
+                       "DISTANCE AB - " + distanceAB + "&#10;" + 
+                       "DISTANCE CB - " + distanceCB + "&#10;" + 
+                       "CURRENT RADIUS - " + currentRadius;
     
     // For Debug Purposes:
-    outputString = outputString +  "&#10;ALPHA - " + ALPHA;
-    outputString = outputString +  "&#10;EPSILON - " + EPSILON;
-    outputString = outputString +  "&#10;THETA - " + THETA;
-    
+    // outputString = outputString +  "&#10;ALPHA - " + ALPHA;
+    // outputString = outputString +  "&#10;EPSILON - " + EPSILON;
+    // outputString = outputString +  "&#10;THETA - " + THETA;
     // outputString = outputString + "&#10;C - (" + POSITION_C.x + ", " + POSITION_C.y + ")";
     // outputString = outputString +  "&#10;BETA - " + (90 - ALPHA - EPSILON);
 
